@@ -1,0 +1,6 @@
+services:
+  - type: worker
+    name: discord-reminder-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python reminder_bot.py
