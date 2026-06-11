@@ -6,8 +6,13 @@ import os
 
 # ===== الإعدادات - عدّل القيم هنا =====
 TOKEN      = os.environ.get("DISCORD_TOKEN")
-CHANNEL_ID = 1513501351307378810
-ROLE_ID    = 1513487411500290099
+# السيرفر الأول
+CHANNEL_ID  = 1513501351307378810
+ROLE_ID     = 1513487411500290099
+
+# السيرفر الثاني
+CHANNEL_ID2 = 1512868995563524256
+ROLE_ID2    = 1511784648563228702
 TIMEZONE   = "Asia/Riyadh"
 # =======================================
 
@@ -15,6 +20,20 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 tz  = pytz.timezone(TIMEZONE)
+
+
+async def send_to_all(embed, with_mention=True):
+    targets = [
+        (CHANNEL_ID,  ROLE_ID),
+        (CHANNEL_ID2, ROLE_ID2),
+    ]
+    for ch_id, role_id in targets:
+        channel = bot.get_channel(ch_id)
+        if not channel:
+            continue
+        role    = channel.guild.get_role(role_id)
+        mention = role.mention if role else "@member"
+        await channel.send(content=mention if with_mention else None, embed=embed)
 
 
 @tasks.loop(minutes=1)
@@ -25,10 +44,6 @@ async def check_reminders():
     channel = bot.get_channel(CHANNEL_ID)
     if not channel:
         return
-
-    guild = channel.guild
-    role  = guild.get_role(ROLE_ID)
-    mention = role.mention if role else "@member"
 
     # ── 1. Party — يومي الساعة 8:00 م ─────────────────────────────
     if now.hour == 20 and now.minute == 0:
@@ -41,7 +56,7 @@ async def check_reminders():
             color=discord.Color.gold()
         )
         embed.set_footer(text="📅 Daily Event • 8:00 PM")
-        await channel.send(content=mention, embed=embed)
+        await send_to_all(embed)
 
     # ── 2. Breaking Army — الأربعاء والسبت ─────────────────────────
     #    تذكير قبل البداية الساعة 3:15 م
@@ -57,7 +72,7 @@ async def check_reminders():
         embed.add_field(name="🕒 Start",  value="3:30 PM", inline=True)
         embed.add_field(name="🕔 End",    value="5:30 PM", inline=True)
         embed.set_footer(text="📅 Wednesday & Saturday")
-        await channel.send(content=mention, embed=embed)
+        await send_to_all(embed)
 
     #    إعلان البداية الساعة 3:30 م
     if weekday in (2, 5) and now.hour == 15 and now.minute == 30:
@@ -70,7 +85,7 @@ async def check_reminders():
             color=discord.Color.dark_red()
         )
         embed.set_footer(text="Ends at 5:30 PM")
-        await channel.send(content=mention, embed=embed)
+        await send_to_all(embed)
 
     #    إعلان النهاية الساعة 5:30 م
     if weekday in (2, 5) and now.hour == 17 and now.minute == 30:
@@ -80,7 +95,7 @@ async def check_reminders():
             color=discord.Color.greyple()
         )
         embed.set_footer(text="📅 Wednesday & Saturday")
-        await channel.send(content=mention, embed=embed)
+        await send_to_all(embed)
 
     # ── 3. Showdown — الخميس والأحد ────────────────────────────────
     #    تذكير قبل البداية الساعة 4:45 م
@@ -96,7 +111,7 @@ async def check_reminders():
         embed.add_field(name="🕔 Start", value="5:00 PM", inline=True)
         embed.add_field(name="🕖 End",   value="7:00 PM", inline=True)
         embed.set_footer(text="📅 Thursday & Sunday")
-        await channel.send(content=mention, embed=embed)
+        await send_to_all(embed)
 
     #    إعلان البداية الساعة 5:00 م
     if weekday in (3, 6) and now.hour == 17 and now.minute == 0:
@@ -109,7 +124,7 @@ async def check_reminders():
             color=discord.Color.dark_purple()
         )
         embed.set_footer(text="Ends at 7:00 PM")
-        await channel.send(content=mention, embed=embed)
+        await send_to_all(embed)
 
     #    إعلان النهاية الساعة 7:00 م
     if weekday in (3, 6) and now.hour == 19 and now.minute == 0:
@@ -119,7 +134,7 @@ async def check_reminders():
             color=discord.Color.greyple()
         )
         embed.set_footer(text="📅 Thursday & Sunday")
-        await channel.send(content=mention, embed=embed)
+        await send_to_all(embed)
 
     # ── 4. Daily Tasks Reminder — يومي الساعة 8:00 م (مع Party) ───
     if now.hour == 20 and now.minute == 0:
@@ -133,7 +148,7 @@ async def check_reminders():
             color=discord.Color.green()
         )
         embed.set_footer(text="📅 Daily Reminder")
-        await channel.send(embed=embed)   # بدون منشن عشان ما يتكرر مع Party
+        await send_to_all(embed, with_mention=False)   # بدون منشن عشان ما يتكرر مع Party
 
 
 # ── عند تشغيل البوت ────────────────────────────────────────────────
