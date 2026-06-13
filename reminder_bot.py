@@ -59,8 +59,8 @@ async def check_reminders():
         await send_to_all(embed)
 
     # ── 2. Breaking Army — الأربعاء والسبت ─────────────────────────
-    #    تذكير قبل البداية الساعة 3:15 م
-    if weekday in (2, 5) and now.hour == 15 and now.minute == 15:
+    #    تذكير قبل البداية الساعة 4:45 م
+    if weekday in (2, 5) and now.hour == 16 and now.minute == 45:
         embed = discord.Embed(
             title="⚔️ Breaking Army — Starting Soon!",
             description=(
@@ -69,13 +69,13 @@ async def check_reminders():
             ),
             color=discord.Color.red()
         )
-        embed.add_field(name="🕒 Start",  value="3:30 PM", inline=True)
-        embed.add_field(name="🕔 End",    value="5:30 PM", inline=True)
+        embed.add_field(name="🕔 Start", value="5:00 PM", inline=True)
+        embed.add_field(name="🕖 End",   value="7:00 PM", inline=True)
         embed.set_footer(text="📅 Wednesday & Saturday")
         await send_to_all(embed)
 
-    #    إعلان البداية الساعة 3:30 م
-    if weekday in (2, 5) and now.hour == 15 and now.minute == 30:
+    #    إعلان البداية الساعة 5:00 م
+    if weekday in (2, 5) and now.hour == 17 and now.minute == 0:
         embed = discord.Embed(
             title="⚔️ Breaking Army — Let's GO!",
             description=(
@@ -84,17 +84,61 @@ async def check_reminders():
             ),
             color=discord.Color.dark_red()
         )
-        embed.set_footer(text="Ends at 5:30 PM")
+        embed.set_footer(text="Ends at 7:00 PM")
         await send_to_all(embed)
 
-    #    إعلان النهاية الساعة 5:30 م
-    if weekday in (2, 5) and now.hour == 17 and now.minute == 30:
+    #    إعلان النهاية الساعة 7:00 م
+    if weekday in (2, 5) and now.hour == 19 and now.minute == 0:
         embed = discord.Embed(
             title="⚔️ Breaking Army — Event Ended",
             description="**Breaking Army** has ended. Great effort everyone! 🏆",
             color=discord.Color.greyple()
         )
         embed.set_footer(text="📅 Wednesday & Saturday")
+        await send_to_all(embed)
+
+    # ── 5. GVG Guild War — السبت والأحد ────────────────────────────
+    #    تذكير قبل البداية الساعة 9:00 م
+    if weekday in (5, 6) and now.hour == 21 and now.minute == 0:
+        embed = discord.Embed(
+            title="🏰 GVG Guild War — Starting in 15 Minutes!",
+            description=(
+                "⚠️ **Guild War (GVG) begins in 15 minutes!**\n\n"
+                "📌 Make sure to **follow the instructions** sent previously in the server!\n"
+                "Your coordination and discipline are key to victory! 🗡️🛡️"
+            ),
+            color=discord.Color.dark_gold()
+        )
+        embed.add_field(name="🕘 Start", value="9:15 PM",  inline=True)
+        embed.add_field(name="🕛 End",   value="12:00 AM", inline=True)
+        embed.set_footer(text="📅 Saturday & Sunday")
+        await send_to_all(embed)
+
+    #    إعلان البداية الساعة 9:15 م
+    if weekday in (5, 6) and now.hour == 21 and now.minute == 15:
+        embed = discord.Embed(
+            title="🏰 GVG Guild War — STARTING NOW! ⚔️",
+            description=(
+                "🚨 **Guild War has begun!**\n\n"
+                "📋 **Follow the instructions** shared in the server — no improvisation!\n"
+                "Stay focused, stay coordinated, and fight for the guild! 💪🔥"
+            ),
+            color=discord.Color.brand_red()
+        )
+        embed.set_footer(text="Ends at 12:00 AM • Sat & Sun")
+        await send_to_all(embed)
+
+    #    إعلان النهاية الساعة 12:00 ص
+    if weekday in (5, 6) and now.hour == 0 and now.minute == 0:
+        embed = discord.Embed(
+            title="🏰 GVG Guild War — Ended",
+            description=(
+                "**Guild War is over!** Great fight everyone! 🏆\n"
+                "Rest up and get ready for the next battle! 💤"
+            ),
+            color=discord.Color.greyple()
+        )
+        embed.set_footer(text="📅 Saturday & Sunday")
         await send_to_all(embed)
 
     # ── 3. Showdown — الخميس والأحد ────────────────────────────────
@@ -171,10 +215,11 @@ async def schedule(ctx):
         title=f"📅 Today's Schedule — {days[weekday]}",
         color=discord.Color.blue()
     )
-    embed.add_field(name="🎉 Party",              value="Every day  •  8:00 PM",            inline=False)
-    embed.add_field(name="📋 Daily Tasks Reminder", value="Every day  •  8:00 PM",           inline=False)
-    embed.add_field(name="🏆 Showdown",           value="Thu & Sun  •  5:00 PM → 7:00 PM",  inline=False)
-    embed.add_field(name="⚔️ Breaking Army",      value="Wed & Sat  •  3:30 PM → 5:30 PM",  inline=False)
+    embed.add_field(name="🎉 Party",               value="Every day  •  8:00 PM",             inline=False)
+    embed.add_field(name="📋 Daily Tasks Reminder", value="Every day  •  8:00 PM",            inline=False)
+    embed.add_field(name="⚔️ Breaking Army",      value="Wed & Sat  •  5:00 PM → 7:00 PM",   inline=False)
+    embed.add_field(name="🏆 Showdown",           value="Thu & Sun  •  5:00 PM → 7:00 PM",   inline=False)
+    embed.add_field(name="🏰 GVG Guild War",      value="Sat & Sun  •  9:15 PM → 12:00 AM",  inline=False)
     embed.set_footer(text="All times are Saudi Arabia time (GMT+3)")
     await ctx.send(embed=embed)
 
